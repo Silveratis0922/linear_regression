@@ -1,17 +1,8 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-
-
-# def show_data(theta_0, theta_1, df):
-#     plt.scatter(df['km'], df['price'])
-#     plt.plot(df['km'], theta_0 + theta_1 * df['km'])
-#     plt.title("Test")
-#     plt.xlabel("Mileage")
-#     plt.ylabel("Price")
-#     plt.show()
 
 
 def normalized_data(df) -> pd.DataFrame:
+    """Normalizes true Data using min-max normalization"""
     min_km = df['km'].min()
     max_km = df['km'].max()
     min_price = df['price'].min()
@@ -23,6 +14,7 @@ def normalized_data(df) -> pd.DataFrame:
 
 
 def denormilize_value(theta_0, theta_1, df):
+    """Denormilize regression parameters back to their original scale"""
     min_km = df['km'].min()
     max_km = df['km'].max()
     min_price = df['price'].min()
@@ -37,10 +29,12 @@ def denormilize_value(theta_0, theta_1, df):
 
 
 def estimate_price(theta_0, theta_1, x):
+    """Basic linear regression calcul"""
     return theta_0 + theta_1 * x
 
 
 def gradient_descent(theta_0, theta_1, df, learningRate):
+    """Update and main algorythm of training model."""
     m = len(df)
     tmp_0 = 0
     tmp_1 = 0
@@ -72,8 +66,12 @@ def main():
         df_result = pd.DataFrame({'theta_0': [theta_0],
                                   'theta_1': [theta_1]})
         df_result.to_csv('model.csv')
+        print("The training is finished. The result of training is in 'model.csv file.")
+    except KeyboardInterrupt:
+        print("The program was interrupted. Please try again")
     except Exception as e:
         print(f"{type(e).__name__}: Error")
+
 
 if __name__ == "__main__":
     main()

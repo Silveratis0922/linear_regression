@@ -1,5 +1,4 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 
 
 def normalized_data(df) -> pd.DataFrame:
@@ -59,12 +58,13 @@ def main():
             theta_0, theta_1 = gradient_descent(theta_0, theta_1, df, learningRate)
         theta_0, theta_1 = denormilize_value(theta_0, theta_1, df)
         df_result = pd.DataFrame({'theta_0': [theta_0],
-                              'theta_1': [theta_1]})
+                                  'theta_1': [theta_1]})
         df_result.to_csv('model_bonus.csv')
+        print("The training is finished. The result of training is in 'model_bonus.csv file.")
+    except KeyboardInterrupt:
+        print("The program was interrupted. Please try again")
     except Exception as e:
         print(f"{type(e).__name__}: Error")
-    except AssertionError:
-        print("osef")
 
 
 if __name__ == "__main__":

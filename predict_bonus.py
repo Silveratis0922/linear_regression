@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 
 def save_data(df, prediction, x):
+    """Save low and max data for the scale of the graph"""
     min_km = min(df['km'].min(), x)
     max_km = max(df['km'].max(), x)
     min_price = min(df['price'].min(), prediction)
@@ -12,6 +13,7 @@ def save_data(df, prediction, x):
 
 
 def display_data():
+    """Display true data"""
     df = pd.read_csv("data.csv")
     plt.scatter(df['km'], df['price'])
     plt.title("Graph of the real data")
@@ -20,7 +22,9 @@ def display_data():
     plt.show()
     return df
 
+
 def display_linear_regression(theta_0, theta_1, df):
+    """Display true data with linear regression line through true data"""
     line = theta_0 + theta_1 * df['km']
 
     plt.scatter(df['km'], df['price'], label="real data")
@@ -31,9 +35,11 @@ def display_linear_regression(theta_0, theta_1, df):
     plt.ylabel("Price")
     plt.show()
 
+
 def display_estimate_price(theta_0, theta_1, prediction, x, df):
+    """Display the mileage given on your linear regression line"""
     min_km, min_price, max_km, max_price = save_data(df, prediction, x)
-    
+
     line_min = theta_0 + theta_1 * 0
     line_max = theta_0 + theta_1 * 500000
     xab = [0, 500000]
@@ -51,17 +57,30 @@ def display_estimate_price(theta_0, theta_1, prediction, x, df):
 
 
 def model_result():
+    """Read the csv file of the training model"""
     df = pd.read_csv("model_bonus.csv")
     theta_0 = df.iloc[0]["theta_0"]
     theta_1 = df.iloc[0]["theta_1"]
     return theta_0, theta_1
 
-def accuracy():
-    #Plus que le dernier bonus et c'est parfait
+
+def accuracy(theta_0, theta_1, prediction, df):
+    """Function for the Coefficient of determination calculation
+       print the accuracy of the algorythm"""
+    sst = 0
+    ssr = 0
+    y_mean = df['price'].mean()
+
+    for i in range(len(df)):
+        sst += (df.iloc[i].price - y_mean) ** 2
+        ssr += (df.iloc[i].price - (theta_0 + theta_1 * df.iloc[i].km)) ** 2
+    r_square = 1 - ssr / sst
+    print(f"The accuracy of the algorith is {r_square * 100:.2f}%.")
+
 
 def main():
     try:
-        print("Enter the mileage for prediciton: ")
+        print("Enter the mileage for prediction: ")
         x = int(input())
         if x < 0:
             raise AssertionError("Milage cant't be under zero.")
@@ -73,6 +92,7 @@ def main():
             prediction = 0
         print(f"The prediction price is {prediction} for {x} mileage.")
         display_estimate_price(theta_0, theta_1, prediction, x, df)
+        accuracy(theta_0, theta_1, prediction, df)
     except AssertionError as e:
         print(f"{AssertionError.__name__}: {e}")
     except ValueError:

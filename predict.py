@@ -2,6 +2,7 @@ import pandas as pd
 
 
 def model_result():
+    """Read the csv file of the training model"""
     df = pd.read_csv("model.csv")
     theta_0 = df.iloc[0]["theta_0"]
     theta_1 = df.iloc[0]["theta_1"]
