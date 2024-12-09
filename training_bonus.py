@@ -2,6 +2,7 @@ import pandas as pd
 
 
 def normalized_data(df) -> pd.DataFrame:
+    """Normalizes true data using min-max normalization"""
     min_km = df['km'].min()
     max_km = df['km'].max()
     min_price = df['price'].min()
@@ -12,6 +13,7 @@ def normalized_data(df) -> pd.DataFrame:
 
 
 def denormilize_value(theta_0, theta_1, df):
+    """Denormilize regression parameters back to thei original scale"""
     min_km = df['km'].min()
     max_km = df['km'].max()
     min_price = df['price'].min()
@@ -26,10 +28,12 @@ def denormilize_value(theta_0, theta_1, df):
 
 
 def estimate_price(theta_0, theta_1, x):
+    """Basic linear regression calcul"""
     return theta_0 + theta_1 * x
 
 
 def gradient_descent(theta_0, theta_1, df, learningRate):
+    """Update and main algorythm of traning model."""
     m = len(df)
     tmp_0 = 0
     tmp_1 = 0
@@ -50,17 +54,19 @@ def main():
         df = pd.read_csv("data.csv")
         theta_0 = 0
         theta_1 = 0
-        learningRate = 0.1
+        lr = 0.1
         epochs = 1000
 
         normalized_data(df)
         for i in range(epochs):
-            theta_0, theta_1 = gradient_descent(theta_0, theta_1, df, learningRate)
+            theta_0, theta_1 = gradient_descent(theta_0, theta_1, df, lr)
         theta_0, theta_1 = denormilize_value(theta_0, theta_1, df)
         df_result = pd.DataFrame({'theta_0': [theta_0],
                                   'theta_1': [theta_1]})
         df_result.to_csv('model_bonus.csv')
-        print("The training is finished. The result of training is in 'model_bonus.csv file.")
+        print("The training is finished. "
+              "'model_bonus.csv' file has been created.")
+        print("You can run 'predict_bonus.py'")
     except KeyboardInterrupt:
         print("The program was interrupted. Please try again")
     except Exception as e:

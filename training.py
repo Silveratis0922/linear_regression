@@ -10,7 +10,6 @@ def normalized_data(df) -> pd.DataFrame:
 
     df['km_norm'] = (df['km'] - min_km) / (max_km - min_km)
     df['price_norm'] = (df['price'] - min_price) / (max_price - min_price)
-    print(df)
 
 
 def denormilize_value(theta_0, theta_1, df):
@@ -55,18 +54,19 @@ def main():
         df = pd.read_csv("data.csv")
         theta_0 = 0
         theta_1 = 0
-        learningRate = 0.1
+        lr = 0.1
         epochs = 1000
 
         normalized_data(df)
         for i in range(epochs):
-            theta_0, theta_1 = gradient_descent(theta_0, theta_1, df, learningRate)
+            theta_0, theta_1 = gradient_descent(theta_0, theta_1, df, lr)
 
         theta_0, theta_1 = denormilize_value(theta_0, theta_1, df)
         df_result = pd.DataFrame({'theta_0': [theta_0],
                                   'theta_1': [theta_1]})
         df_result.to_csv('model.csv')
-        print("The training is finished. The result of training is in 'model.csv file.")
+        print("The training is finished. 'model.csv' file has been created")
+        print("You can run 'predict.py'.")
     except KeyboardInterrupt:
         print("The program was interrupted. Please try again")
     except Exception as e:

@@ -39,6 +39,7 @@ def display_linear_regression(theta_0, theta_1, df):
 def display_estimate_price(theta_0, theta_1, prediction, x, df):
     """Display the mileage given on your linear regression line"""
     min_km, min_price, max_km, max_price = save_data(df, prediction, x)
+    arg = {"markersize": 8, "markeredgewidth": 2, "label": "prediction"}
 
     line_min = theta_0 + theta_1 * 0
     line_max = theta_0 + theta_1 * 500000
@@ -46,7 +47,7 @@ def display_estimate_price(theta_0, theta_1, prediction, x, df):
     yab = [line_min, line_max]
     plt.scatter(df['km'], df['price'], label="real data")
     plt.plot(xab, yab, 'k', label="linear regression")
-    plt.plot(x, prediction, 'rx', markersize=8, markeredgewidth=2, label='prediction')
+    plt.plot(x, prediction, 'rx', **arg)
     plt.xlim(min_km - 25000, max_km + 25000)
     plt.ylim(min_price - 1000, max_price + 1000)
     plt.legend()
@@ -81,6 +82,8 @@ def accuracy(theta_0, theta_1, prediction, df):
 def main():
     try:
         print("Enter the mileage for prediction: ")
+        theta_0 = 0
+        theta_1 = 0
         x = int(input())
         if x < 0:
             raise AssertionError("Milage cant't be under zero.")
@@ -90,7 +93,7 @@ def main():
         prediction = theta_0 + theta_1 * x
         if prediction < 0:
             prediction = 0
-        print(f"The prediction price is {prediction} for {x} mileage.")
+        print(f"The prediction price is {prediction:.2f} for {x} mileage.")
         display_estimate_price(theta_0, theta_1, prediction, x, df)
         accuracy(theta_0, theta_1, prediction, df)
     except AssertionError as e:
@@ -101,6 +104,10 @@ def main():
         print("The program was interrupted. Please try again")
     except OverflowError:
         print("You might change your car.")
+    except FileNotFoundError:
+        prediction = theta_0 + theta_1 * x
+        print(f"{FileNotFoundError.__name__}: "
+              f"The prediction price is {prediction:.2f} for {x} mileage.")
     except Exception as e:
         print(f"{type(e).__name__} : Try again.")
 
